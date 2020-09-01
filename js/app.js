@@ -1,11 +1,12 @@
-let btn = document.querySelector('.btn');
-let input = document.querySelector('.input-value');
+const btn = document.querySelector('.btn');
+const input = document.querySelector('.input-value');
+const output = document.querySelector('.output');
+const isTouchDevice = window.matchMedia("(any-pointer: coarse)").matches;
 
-btn.addEventListener("click", () => {
+function convertCurrency() {
     let baseCurrency = document.querySelector('.base-currency').value;
     let targetCurrency = document.querySelector('.target-currency').value;
     let inputValue = document.querySelector('.input-value').value;
-    let output = document.querySelector('.output');
     
     if(isNaN(inputValue) || inputValue === "") {
         output.innerHTML = "Enter a valid value";
@@ -26,26 +27,24 @@ btn.addEventListener("click", () => {
     };
     xhr.open('GET', queryString);
     xhr.send();
-});
+}
 
-input.addEventListener("keyup", () => {
+function validateInput() {
     if(isNaN(input.value)) {
         input.style.borderBottom = "2px solid var(--invalid-color)";
     }
     else {
         input.style.borderBottom = "2px solid var(--tertiary-color)";
     }
-});
+}
 
-document.addEventListener("keypress", ({key}) => {
+function clickBtn({key}) {
     if (key === "Enter") {
         btn.click();
     }
-});
+}
 
-let mqHover = window.matchMedia("(hover: hover)");
-
-if(mqHover.matches) {
+if(!isTouchDevice) {
     btn.addEventListener("mousemove", ({offsetX, offsetY, target}) => {
         target.style.backgroundImage = `radial-gradient(circle farthest-side at ${offsetX}px ${offsetY}px, #0074A9, #005075)`;
     });
@@ -54,3 +53,7 @@ if(mqHover.matches) {
         target.style.backgroundImage = `none`;
     });
 }
+
+btn.addEventListener("click", convertCurrency);
+input.addEventListener("keyup", validateInput);
+document.addEventListener("keypress", clickBtn);
